@@ -7,25 +7,24 @@ import androidx.core.content.ContextCompat;
 import androidx.exifinterface.media.ExifInterface;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private Screenshot screenshot;
     private final int MY_PERMISSION_REQUEST = 1;
     private LocationManager locationManager;
-    private LocationListener listenerReference;
+    private MaterialSpinner materialSpinner1, materialSpinner2;
+    private MyLocationListener myLocationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         main = findViewById(R.id.mainLayout);
+        materialSpinner1 = findViewById(R.id.spinnerOne);
+        materialSpinner2 = findViewById(R.id.spinnerTwo);
         screenShotButton = findViewById(R.id.screenShotBtn);
         imageView = findViewById(R.id.imageView);
         screenshot = new Screenshot();
@@ -65,19 +67,36 @@ public class MainActivity extends AppCompatActivity {
             buildAlertMessageNoGps();
 
         }
+
+        materialSpinner1.setItems("Project One", "Project Two", "Project Three", "Project Four");
+        materialSpinner2.setItems("Milestone One", "Milestone two", "Milestone three", "Milestone four");
+        materialSpinner1.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+                Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+            }
+        });
+        materialSpinner2.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
+                Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+            }
+        });
+
     }
+
 
     public void screeshotCode() {
         screenShotButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View onClick) {
                 Bitmap b = screenshot.returnRootViewOfScreenshot(main, getApplicationContext());
-                MyLocationListener myLocationListener = new MyLocationListener();
+                myLocationListener = new MyLocationListener();
                 if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
                     Log.e("location request code", "Code got hit under requestLocationUpdates() GPS");
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, myLocationListener);
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, myLocationListener);
-                    //listenerReference = myLocationListener;
+
                 if (b != null)
                     Toast.makeText(getApplicationContext(), "Screenshot taken", Toast.LENGTH_SHORT).show();
                 //main.setBackgroundColor(Color.parseColor("#999999"));
@@ -119,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
             Log.e("exif code", "Code got hit for exif!");
             //locationManager.removeUpdates(listener);
             imageView.setImageBitmap(null);
-
+            locationManager.removeUpdates(myLocationListener);
         } catch (IOException e) {
             e.printStackTrace();
             Log.e("exif error", e.getMessage());

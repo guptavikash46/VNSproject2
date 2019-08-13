@@ -17,7 +17,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,14 +24,14 @@ public class DisplayFiles extends AppCompatActivity {
     private ListView listView;
     private ArrayAdapter<String> arrayAdapter;
     private List<String> fileNames;
-    private String googlePhotosPackageName;
+    private String googlePhotosPackageName, directory;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.display_files_list);
         listView = findViewById(R.id.files_list);
 
-        final String directory = Environment.getExternalStorageDirectory().toString() +"/DCIM/VNSproject";
+        directory = Environment.getExternalStorageDirectory().toString() +"/DCIM/VNSproject";
         File dir = new File(directory);
         File[] fileList = dir.listFiles();
         fileNames = new ArrayList<>();
@@ -45,12 +44,16 @@ public class DisplayFiles extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               // Toast.makeText(getApplicationContext(), "Under progress", Toast.LENGTH_SHORT).show();
-                Intent intent =  new Intent();
-                intent.setAction(Intent.ACTION_VIEW);
-                intent.setType("image/*");
-                intent.setPackage(googlePhotosPackageName);
-                startActivityForResult(intent, 1);
+              try{
+                  Intent intent =  new Intent();
+                  intent.setAction(Intent.ACTION_VIEW);
+                  intent.setType("image/*");
+                  intent.setPackage(googlePhotosPackageName);
+                  startActivityForResult(intent, 1);
+                }
+                catch (Exception e){
+                  Toast.makeText(getApplicationContext(), "Please install google photos app to view.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

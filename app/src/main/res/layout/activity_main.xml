@@ -7,6 +7,22 @@
     tools:context=".MainActivity"
     android:id="@+id/mainLayout">
 
+    <com.jaredrummler.materialspinner.MaterialSpinner
+        android:id="@+id/spinnerOne"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
+
+
+    <com.jaredrummler.materialspinner.MaterialSpinner
+        android:layout_marginTop="20dp"
+        android:id="@+id/spinnerTwo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinnerOne"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
 
     <Button
         android:id="@+id/screenShotBtn"
@@ -15,7 +31,8 @@
         android:text="Take screenshot"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="40dp"
-        android:layout_marginTop="100dp"/>
+        android:layout_below="@id/spinnerTwo"
+        android:layout_marginTop="80dp"/>
 
     <Button
         android:id="@+id/displayRecords"
@@ -23,8 +40,9 @@
         android:layout_height="wrap_content"
         android:text="See records"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="80dp"
         android:layout_marginRight="40dp"
+        android:layout_below="@id/spinnerTwo"
         android:onClick="displayFiles"/>
 
     <ImageView
@@ -32,7 +50,9 @@
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/screenShotBtn"/>
+        android:layout_below="@id/screenShotBtn"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
 
 
 </RelativeLayout>
